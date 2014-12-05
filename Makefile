@@ -1,29 +1,34 @@
 # Set up cross-compilation toolchain
-TOOLCHAIN	= arm-none-eabi
-CC		= $(TOOLCHAIN)-gcc
-AS		= $(TOOLCHAIN)-as
-LD		= $(TOOLCHAIN)-ld
-OBJCOPY		= $(TOOLCHAIN)-objcopy
-OBJDUMP		= $(TOOLCHAIN)-objdump
+TOOLCHAIN	 = arm-none-eabi
+CC		 = $(TOOLCHAIN)-gcc
+AS		 = $(TOOLCHAIN)-as
+LD		 = $(TOOLCHAIN)-ld
+OBJCOPY		 = $(TOOLCHAIN)-objcopy
+OBJDUMP		 = $(TOOLCHAIN)-objdump
+
+# Model should be 1 for the original Model A / Model B, and 2 for
+# the A+/B+.
+MODEL		?= 2
 
 # Targets
-BUILDDIR	= build
-OBJDIR		= objs
-INCLUDES	= include
-SRCDIR		= src
-TARGET		= kernel.img
-LINKER		= pious.ld
-AOUT		= $(BUILDDIR)/kernel.elf
+BUILDDIR	 = build
+OBJDIR		 = objs
+INCLUDES	 = include
+SRCDIR		 = src
+TARGET		 = kernel.img
+LINKER		 = pious.ld
+AOUT		 = $(BUILDDIR)/kernel.elf
 
-OBJS		= $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.c))
+OBJS		 = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.c))
 
-MAP		= $(BUILDDIR)/kernel.map
-LIST		= $(BUILDDIR)/kernel.list
-START		= $(OBJDIR)/start.o
+MAP		 = $(BUILDDIR)/kernel.map
+LIST		 = $(BUILDDIR)/kernel.list
+START		 = $(OBJDIR)/start.o
 
 # Build options
 CFLAGS		+= -O2 -mfpu=vfp -mfloat-abi=soft -march=armv6zk
 CFLAGS		+= -mtune=arm1176jzf-s -I$(INCLUDES)
+CFLAGS		+= -DMODEL=$(MODEL)
 
 
 # all: 
