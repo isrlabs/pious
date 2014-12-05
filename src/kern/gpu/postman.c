@@ -1,3 +1,0 @@
-/*
- * postman: mailbox code
- */
