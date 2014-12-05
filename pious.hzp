@@ -5,14 +5,25 @@
       Name="Common"
       arm_architecture="v6"
       arm_core_type="ARM1176JZF-S"
+      arm_fp_abi="Hard"
       arm_fpu_type="VFP"
+      arm_linker_treat_warnings_as_errors="No"
       arm_simulator_memory_simulation_filename="$(TargetsDir)/Raspberry_Pi/Raspberry_PiSimulatorMemory.dll"
       arm_simulator_memory_simulation_parameter="BCM2835;0x1000000"
       arm_target_debug_interface_type="ARM11"
       arm_target_restrict_memory_accesses="Yes"
-      c_additional_options="-I$(ProjectDir)/include"
+      build_intermediate_directory="objs"
+      build_output_directory="$(ProjectDir)/build/$(Configuration)"
+      build_quietly="No"
+      build_remove_unused_symbols="Yes"
+      build_treat_warnings_as_errors="Yes"
+      c_additional_options="-I$(ProjectDir)/include;-DNO_CACHE_ENABLE"
       c_enforce_ansi_checking="Yes"
+      c_user_include_directories=".;$(ProjectDir)/include"
       gcc_c_language_standard="c90"
+      gcc_enable_all_warnings="Yes"
+      gcc_entry_point="_start"
+      linker_additional_options="-nostartfiles"
       linker_memory_map_file="$(TargetsDir)/Raspberry_Pi/Raspberry_Pi_MemoryMap.xml"
       linker_post_build_command="&quot;$(StudioDir)/gcc/arm-none-eabi/bin/objcopy&quot; &quot;$(TargetPath)&quot; kernel.img -Obinary"
       linker_section_placement_file="$(StudioDir)/targets/sram_placement.xml"
@@ -21,7 +32,10 @@
       target_reset_script="Reset()"
       target_script_file="$(TargetsDir)/Raspberry_Pi/Raspberry_Pi_Target.js" />
     <folder Name="Source Files">
-      <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc" />
+      <configuration
+        Name="Common"
+        c_additional_options=""
+        filter="c;cpp;cxx;cc;h;s;asm;inc" />
       <file file_name="src/kern/gpio/gpio.c" />
       <file file_name="include/gpio.h" />
       <file file_name="src/kern/gpu/framebuf.c">
@@ -29,15 +43,18 @@
           Name="Common"
           build_object_file_name="$(ProjectRoot)/objs/$(InputName)$(OBJ)"
           build_treat_warnings_as_errors="Yes" />
+        <configuration Name="ARM Debug" build_exclude_from_build="Yes" />
+        <configuration Name="ARM Release" build_exclude_from_build="Yes" />
       </file>
-      <file file_name="src/kern/gpu/postman.c" />
+      <file file_name="src/kern/gpu/postman.c">
+        <configuration Name="ARM Debug" build_exclude_from_build="Yes" />
+        <configuration Name="ARM Release" build_exclude_from_build="Yes" />
+      </file>
       <file file_name="src/shell/shell.c" />
       <file file_name="include/gpu.h" />
     </folder>
     <folder Name="System Files">
-      <file file_name="$(StudioDir)/source/crt0.s" />
-      <file file_name="$(TargetsDir)/Raspberry_Pi/Raspberry_Pi_ctl_board.c" />
-      <file file_name="$(TargetsDir)/Raspberry_Pi/Raspberry_Pi_Startup.s" />
+      <file file_name="src/kern/start.s" />
     </folder>
   </project>
   <configuration Name="ARM Debug" inherited_configurations="ARM;Debug" />
