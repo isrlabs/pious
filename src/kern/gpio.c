@@ -1,4 +1,4 @@
-#include <gpio.h>
+#include <gpio/gpio.h>
 
 
 
@@ -19,15 +19,16 @@ GPIO_set_function(unsigned int pin, unsigned char f)
 	if (pin > 53)
 		return;
 	if (f > 7)
-		return; 
+		return;
 
 	while (pin > 9) {
 		pin -= 10;
 		shift++;
 	};
 
+	pin += (pin << 1);
 	val = f << pin;
-	gpio[shift] |= val;	
+	gpio[shift] |= val;
 	return;
 }
 
@@ -44,7 +45,7 @@ GPIO_set(unsigned char pin)
 		return;
 	} else if (pin > 31) {
 		bank = GPIO_GPSET1;
-		pin -= 31;
+		pin -= 32;
 	}
 
 	gpio[bank] |= (1 << pin);
@@ -63,7 +64,7 @@ GPIO_clear(unsigned char pin)
 		return;
 	} else if (pin > 31) {
 		bank = GPIO_GPCLR1;
-		pin -= 31;
+		pin -= 32;
 	}
 
 	gpio[bank] |= (1 << pin);
