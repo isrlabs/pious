@@ -53,8 +53,8 @@
  </TraceWindow>
  <Watch1>
   <Watches active="1" update="Twice a Second" >
-   <Watchpoint linenumber="5" radix="16" name="gpio" expression="gpio" filename="/home/kyle/src/pious-c/src/kern/gpio/gpio.c" />
    <Watchpoint linenumber="29" radix="16" name="val" expression="val" filename="/home/kyle/src/pious-c/src/kern/gpio/gpio.c" />
+   <Watchpoint linenumber="5" radix="16" name="gpio" expression="gpio" filename="/home/kyle/src/pious-c/src/kern/gpio/gpio.c" />
   </Watches>
  </Watch1>
  <Watch2>
@@ -68,10 +68,8 @@
  </Watch4>
  <Files>
   <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Default" x="0" debugPath="/home/kyle/src/pious-c/include/gpio.h" y="22" path="/home/kyle/src/pious-c/include/gpio.h" left="0" selected="0" name="unnamed" top="0" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Default" x="0" debugPath="/home/kyle/src/pious-c/src/kern/gpu/framebuf.c" y="3" path="/home/kyle/src/pious-c/src/kern/gpu/framebuf.c" left="0" selected="0" name="unnamed" top="0" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Default" x="0" debugPath="/home/kyle/src/pious-c/src/shell/shell.c" y="14" path="/home/kyle/src/pious-c/src/shell/shell.c" left="0" selected="0" name="unnamed" top="0" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Default" x="0" debugPath="/home/kyle/src/pious-c/src/kern/start.s" y="0" path="/home/kyle/src/pious-c/src/kern/start.s" left="0" selected="0" name="unnamed" top="0" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Default" x="0" debugPath="/home/kyle/src/pious-c/src/kern/gpio/gpio.c" y="0" path="/home/kyle/src/pious-c/src/kern/gpio/gpio.c" left="0" selected="1" name="unnamed" top="0" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="" x="0" debugPath="/home/kyle/src/pious-c/src/shell.c" y="4" path="/home/kyle/src/pious-c/src/shell.c" left="0" selected="0" name="unnamed" top="0" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Default" x="0" debugPath="/home/kyle/src/pious-c/src/gpio.c" y="0" path="/home/kyle/src/pious-c/src/gpio.c" left="0" selected="1" name="unnamed" top="0" />
  </Files>
  <ARMCrossStudioWindow activeProject="pious" autoConnectTarget="ARM Simulator" debugSearchFileMap="" fileDialogInitialDirectory="/home/kyle/src/pious-c/src/start" fileDialogDefaultFilter="*.h" autoConnectCapabilities="4287" debugSearchPath="" buildConfiguration="ARM Debug" />
 </session>

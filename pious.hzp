@@ -17,8 +17,9 @@
       build_quietly="No"
       build_remove_unused_symbols="Yes"
       build_treat_warnings_as_errors="Yes"
-      c_additional_options="-I$(ProjectDir)/include;-DNO_CACHE_ENABLE"
+      c_additional_options="-I$(ProjectDir)/include;-DMODEL=2"
       c_enforce_ansi_checking="Yes"
+      c_preprocessor_definitions=""
       c_user_include_directories=".;$(ProjectDir)/include"
       gcc_c_language_standard="c90"
       gcc_enable_all_warnings="Yes"
@@ -36,25 +37,12 @@
         Name="Common"
         c_additional_options=""
         filter="c;cpp;cxx;cc;h;s;asm;inc" />
-      <file file_name="src/kern/gpio/gpio.c" />
-      <file file_name="include/gpio.h" />
-      <file file_name="src/kern/gpu/framebuf.c">
-        <configuration
-          Name="Common"
-          build_object_file_name="$(ProjectRoot)/objs/$(InputName)$(OBJ)"
-          build_treat_warnings_as_errors="Yes" />
-        <configuration Name="ARM Debug" build_exclude_from_build="Yes" />
-        <configuration Name="ARM Release" build_exclude_from_build="Yes" />
-      </file>
-      <file file_name="src/kern/gpu/postman.c">
-        <configuration Name="ARM Debug" build_exclude_from_build="Yes" />
-        <configuration Name="ARM Release" build_exclude_from_build="Yes" />
-      </file>
+      <file file_name="src/kern/gpio.c" />
       <file file_name="src/shell/shell.c" />
-      <file file_name="include/gpu.h" />
+      <file file_name="src/kern/timer.c" />
     </folder>
     <folder Name="System Files">
-      <file file_name="src/kern/start.s" />
+      <file file_name="src/start.s" />
     </folder>
   </project>
   <configuration Name="ARM Debug" inherited_configurations="ARM;Debug" />
