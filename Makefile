@@ -19,27 +19,31 @@ TARGET		 = kernel.img
 LINKER		 = pious.ld
 AOUT		 = $(BUILDDIR)/kernel.elf
 
-OBJS		 = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.c))
+START		= $(OBJDIR)/start.o
+KOBJS		= $(patsubst $(SRCDIR)/kern/%.c,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/kern/*.c))
+KOBJS		:= $(filter-out $(START),$(KOBJS))
+UOBJS		= $(patsubst $(SRCDIR)/shell/%.c,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/shell/*.c))
+OBJS		= $(KOBJS) $(UOBJS)
 
 MAP		 = $(BUILDDIR)/kernel.map
 LIST		 = $(BUILDDIR)/kernel.list
 START		 = $(OBJDIR)/start.o
 
 # Build options
-CFLAGS		+= -O2 -mfpu=vfp -mfloat-abi=soft -march=armv6zk
+CFLAGS		+= -O0 -mfpu=vfp -mfloat-abi=soft -march=armv6zk
 CFLAGS		+= -mtune=arm1176jzf-s -I$(INCLUDES)
 CFLAGS		+= -DMODEL=$(MODEL)
 
 
-# all: 
-# 	@echo "This Makefile is still in progress."
-# 	@echo "Objects: $(OBJS)"
-# 	@echo "Source directory: $(SRCDIR)"
-# 	@echo "Sources: $(wildcard $(SRCDIR)/*.c)"
-# 	@echo "a.out: $(AOUT)"
-
 .PHONY: all
 all: $(TARGET) $(LIST)
+
+info:
+	@echo "This Makefile is still in progress."
+	@echo "Objects: $(OBJS)"
+	@echo "Source directory: $(SRCDIR)"
+	@echo "Sources: $(wildcard $(SRCDIR)/*.c)"
+	@echo "a.out: $(AOUT)"
 
 $(BUILDDIR):
 	mkdir $(BUILDDIR)
@@ -56,11 +60,14 @@ $(AOUT): $(OBJS) $(LINKER) $(START)
 $(LIST): $(AOUT)
 	$(OBJDUMP) -d $(AOUT) > $@
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c $(OBJDIR)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJDIR)/%.o: $(SRCDIR)/%.s $(OBJDIR)
+$(START): $(SRCDIR)/start.s
 	$(AS) -o $@ $<
+
+$(OBJDIR)/%.o: $(SRCDIR)/shell/%.c $(OBJDIR)
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJDIR)/%.o: $(SRCDIR)/kern/%.c $(OBJDIR)
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 .PHONY: clean
 clean:
