@@ -30,6 +30,7 @@ LIST		 = $(BUILDDIR)/kernel.list
 START		 = $(OBJDIR)/start.o
 
 # Build options
+MCPU		 = -mcpu=arm1176jzf-s
 CFLAGS		+= -O0 -mfpu=vfp -mfloat-abi=soft -march=armv6zk
 CFLAGS		+= -mtune=arm1176jzf-s -I$(INCLUDES)
 CFLAGS		+= -DMODEL=$(MODEL)
@@ -61,7 +62,7 @@ $(LIST): $(AOUT)
 	$(OBJDUMP) -d $(AOUT) > $@
 
 $(START): $(SRCDIR)/start.s
-	$(AS) -o $@ $<
+	$(CC) $(MCPU) -fpic -ffreestanding -c -o $@ $<
 
 $(OBJDIR)/%.o: $(SRCDIR)/shell/%.c $(OBJDIR)
 	$(CC) $(CFLAGS) -o $@ -c $<
