@@ -1,53 +1,72 @@
 #include <stdint.h>
 
-#include <util.h>
-#include <gpio/gpio.h>
-#include <uart.h>
+#include <kern/util.h>
+#include <kern/gpio/gpio.h>
+#include <kern/mmio/mmio.h>
+#include <kern/uart/uart.h>
+
+
+#define UART_CLOCK	(3000000)
+#define UART_BAUD	(115200)
+
+const unsigned int	UART_TXD = 14;
+const unsigned int	UART_RXD = 15;
+
+
+static inline void
+uart_clear_interrupts(void)
+{
+	write_mmio(UART0_ICR, 0x7FF);
+}
 
 
 void
 uart_initialise()
 {
-	/* Implementation cribbed from OSDev wiki. */
+	/*
+	 * The UART uses GPIO 14 as TXD0 when in ALT0 mode, and GPIO 15 as RXD0
+	 * when in ALT0 mode. Pull needs to be low.
+	 */
+	GPIO_set_function(UART_TXD, GPIO_ALT0);
+	GPIO_set_function(UART_RXD, GPIO_ALT1);
 
-	/* Disable UART0. */
+	/*
+	 * From the data sheet:
+	 *
+	 * Program the control registers as follows:
+	 * 1. Disable the UART.
+	 * 2. Wait for the end of transmission or reception of the current
+	 * character.
+	 * 3. Flush the transmit FIFO by setting the FEN bit to 0 in the Line
+	 * Control Register, UART_LCRH.
+	 * 4. Reprogram the Control Register, UART_CR.
+	 * 5. Enable the UART
+	 */
+
+	/* Disable the UART. */
 	write_mmio(UART0_CR, 0x00000000);
-	/* Setup the GPIO pin 14 && 15. */
-
-	/* Disable pull up/down for all GPIO pins & delay for 150 cycles. */
 	write_mmio(GPIO_GPPUD, 0x00000000);
-	__delay(150);
+	__delay(150); /* Wait for any transmissions to finish. */
 
-	/* Disable pull up/down for pin 14/15 & delay for 150 cycles. */
+	/* Set the pull for TXD0 and RXD0 to low. */
 	write_mmio(GPIO_GPPUDCLK0, _BIT(14) | _BIT(15));
 	__delay(150);
-
-	/* Write 0 to GPPUDCLK0 to make it take effect. */
 	write_mmio(GPIO_GPPUDCLK0, 0x00000000);
 
-	/* Clear pending interrupts. */
-	write_mmio(UART0_ICR, 0x7FF);
+	uart_clear_interrupts();
 
-	/* Set integer & fractional part of baud rate.
-
-	   Divider = UART_CLOCK/(16 * Baud)
-	   Fraction part register = (Fractional part * 64) + 0.5
-	   UART_CLOCK = 3000000; Baud = 115200.
-
-	   Divider = 3000000 / (16 * 115200) = 1.627 = ~1.
-	   Fractional part register = (.627 * 64) + 0.5 = 40.6 = ~40.
-	*/
+	/* Baud rate: 115200 */
 	write_mmio(UART0_IBRD, 1);
 	write_mmio(UART0_FBRD, 40);
 
-	/* Enable FIFO & 8 bit data transmissio (1 stop bit, no parity). */
+	/* Enable the FIFO and data transmit (8N1). */
 	write_mmio(UART0_LCRH, _BIT(4) | _BIT(5) | _BIT(6));
 
-	/* Mask all interrupts. */
+	/* Mask interrupts. */
 	write_mmio(UART0_IMSC, _BIT(1) | _BIT(4) | _BIT(5) | _BIT(6) |
 	    _BIT(7) | _BIT(8) | _BIT(9) | _BIT(10));
 
-	/* Enable UART0, receive & transfer part of UART. */
+	/* Enable UART0: turn on UARTEN, TXE, and RXE. */
 	write_mmio(UART0_CR, _BIT(0) | _BIT(8) | _BIT(9));
 }
 

@@ -1,4 +1,4 @@
-#include <gpio/timer.h>
+#include <kern/gpio/timer.h>
 
 
 unsigned int	*timer = (unsigned int *)TIMER_BASE_ADDRESS;
