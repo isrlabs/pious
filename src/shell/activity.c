@@ -14,15 +14,9 @@ const unsigned int	act = 16;
 
 
 void
-act_led_init()
+act_led_initialise()
 {
 	GPIO_set_function(act, GPIO_FOUT);
-
-#if (MODEL == 2)
-	write_mmio(GPIO_BASE_ADDR+GPIO_GPFSEL4, _BIT(21));
-#else
-	write_mmio(GPIO_BASE_ADDR+GPIO_GPFSEL1, _BIT(18));
-#endif
 }
 
 
@@ -30,9 +24,9 @@ void
 act_led_on()
 {
 #if (MODEL == 2)
-	write_mmio(GPIO_BASE_ADDR+GPIO_GPSET1, _BIT(15));
+	GPIO_set(act);
 #else
-	write_mmio(GPIO_BASE_ADDR+GPIO_GPCLR0, _BIT(16));
+	GPIO_clear(act);
 #endif
 }
 
@@ -41,8 +35,8 @@ void
 act_led_off()
 {
 #if (MODEL == 2)
-	write_mmio(GPIO_BASE_ADDR+GPIO_GPCLR1, _BIT(15));
+	GPIO_clear(act);
 #else
-	write_mmio(GPIO_BASE_ADDR+GPIO_GPSET0, _BIT(16));
+	GPIO_set(act);
 #endif
 }

@@ -5,6 +5,7 @@ AS		 = $(TOOLCHAIN)-as
 LD		 = $(TOOLCHAIN)-ld
 OBJCOPY		 = $(TOOLCHAIN)-objcopy
 OBJDUMP		 = $(TOOLCHAIN)-objdump
+SIZE		 = $(TOOLCHAIN)-size
 
 # Model should be 1 for the original Model A / Model B, and 2 for
 # the A+/B+.
@@ -23,7 +24,8 @@ START		= $(OBJDIR)/start.o
 KOBJS		= $(patsubst $(SRCDIR)/kern/%.c,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/kern/*.c))
 KOBJS		:= $(filter-out $(START),$(KOBJS))
 UOBJS		= $(patsubst $(SRCDIR)/shell/%.c,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/shell/*.c))
-OBJS		= $(KOBJS) $(UOBJS)
+SYSOBJS		= $(patsubst $(SRCDIR)/sys/%.c,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/sys/*.c))
+OBJS		= $(KOBJS) $(UOBJS) $(SYSOBJS)
 
 MAP		 = $(BUILDDIR)/kernel.map
 LIST		 = $(BUILDDIR)/kernel.list
@@ -54,6 +56,7 @@ $(OBJDIR):
 
 $(TARGET): $(AOUT)
 	$(OBJCOPY) $(AOUT) -O binary $@
+	$(SIZE) $(AOUT)
 
 $(AOUT): $(OBJS) $(LINKER) $(START)
 	$(LD) -Map $(MAP) -o $@ -T $(LINKER) $(OBJS) $(START)
@@ -65,6 +68,9 @@ $(START): $(SRCDIR)/start.s
 	$(CC) $(MCPU) -fpic -ffreestanding -c -o $@ $<
 
 $(OBJDIR)/%.o: $(SRCDIR)/shell/%.c $(OBJDIR)
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJDIR)/%.o: $(SRCDIR)/sys/%.c $(OBJDIR)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(OBJDIR)/%.o: $(SRCDIR)/kern/%.c $(OBJDIR)

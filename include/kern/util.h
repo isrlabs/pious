@@ -9,7 +9,7 @@
 
 
 inline void	__delay(int32_t);
-uint32_t	strlen(const char *);
+uint32_t	__strlen(const char *);
 
 
 #endif

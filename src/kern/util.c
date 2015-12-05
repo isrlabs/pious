@@ -11,7 +11,7 @@ __delay(int32_t count)
 
 
 uint32_t
-strlen(const char *s)
+__strlen(const char *s)
 {
 	uint32_t	ret = 0;
 

@@ -31,7 +31,7 @@ uart_initialise()
 	GPIO_set_function(UART_RXD, GPIO_ALT1);
 
 	/*
-	 * From the data sheet:
+	 * From the data sheet, p185:
 	 *
 	 * Program the control registers as follows:
 	 * 1. Disable the UART.
@@ -60,7 +60,7 @@ uart_initialise()
 	write_mmio(UART0_FBRD, 40);
 
 	/* Enable the FIFO and data transmit (8N1). */
-	write_mmio(UART0_LCRH, _BIT(4) | _BIT(5) | _BIT(6));
+	write_mmio(UART0_LCRH,  _BIT(4) | _BIT(5) | _BIT(6));
 
 	/* Mask interrupts. */
 	write_mmio(UART0_IMSC, _BIT(1) | _BIT(4) | _BIT(5) | _BIT(6) |
@@ -70,6 +70,12 @@ uart_initialise()
 	write_mmio(UART0_CR, _BIT(0) | _BIT(8) | _BIT(9));
 }
 
+
+int
+uart_ready()
+{
+
+}
 
 void
 uart_putch(unsigned char data)
@@ -94,7 +100,7 @@ uart_puts(const char *data)
 {
 	uint32_t	dlen = 0;
 
-	dlen = strlen(data);
+	dlen = __strlen(data);
 	write_uart((const unsigned char *)data, dlen);
 }
 
